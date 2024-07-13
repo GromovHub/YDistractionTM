@@ -1,0 +1,36 @@
+// ==UserScript==
+// @name         Remove Contents Div on YouTube
+// @namespace    http://tampermonkey.net/
+// @version      0.2
+// @description  Removes the div with id="contents" from YouTube except on specified pages
+// @match        *://www.youtube.com/*
+// @exclude      *://www.youtube.com/feed/history
+// @exclude      *://www.youtube.com/results?search_query*
+// @exclude      *://www.youtube.com/@*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    function removeContentsDiv() {
+        const element = document.getElementById('contents');
+        if (element) {
+            element.remove();
+        }
+    }
+
+    // Add event listeners
+    window.addEventListener('load', removeContentsDiv);
+    document.addEventListener('DOMContentLoaded', removeContentsDiv);
+
+    // For dynamically inserted content
+    const observer = new MutationObserver(() => {
+        removeContentsDiv();
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+})();
